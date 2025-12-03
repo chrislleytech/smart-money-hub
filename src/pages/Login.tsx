@@ -5,6 +5,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { LoginForm } from '@/components/login/LoginForm';
 import { GeometricShapes } from '@/components/login/GeometricShapes';
+import { ThemeToggle } from '@/components/login/ThemeToggle';
 
 const Login = () => {
   const { isAuthenticated } = useAuth();
@@ -16,6 +17,9 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-navy-gradient flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Toggle de tema */}
+      <ThemeToggle />
+
       {/* Formas geométricas decorativas */}
       <GeometricShapes />
 

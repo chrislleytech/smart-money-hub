@@ -16,6 +16,7 @@ export function LoginForm() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { login, register } = useAuth();
   const navigate = useNavigate();
@@ -166,7 +167,7 @@ export function LoginForm() {
             <Input
               id="password"
               type={showPassword ? 'text' : 'password'}
-              placeholder="••••••••"
+              placeholder="Digite sua senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               variant="glass"
@@ -193,14 +194,21 @@ export function LoginForm() {
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
                 id="confirmPassword"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="••••••••"
+                type={showConfirmPassword ? 'text' : 'password'}
+                placeholder="Confirme sua senha"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 variant="glass"
-                className="pl-10"
+                className="pl-10 pr-10"
                 required={!isLogin}
               />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-card-foreground transition-colors"
+              >
+                {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
             </div>
           </div>
         )}

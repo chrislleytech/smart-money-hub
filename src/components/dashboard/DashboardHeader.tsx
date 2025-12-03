@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
-import { Wallet, Settings, LogOut, User } from 'lucide-react';
+import { Wallet, Settings, LogOut, User, Sun, Moon } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 
 export function DashboardHeader() {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -35,6 +37,20 @@ export function DashboardHeader() {
 
         {/* Ações do usuário */}
         <div className="flex items-center gap-2">
+          {/* Toggle de tema */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={toggleTheme}
+            className="text-muted-foreground hover:text-card-foreground"
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-5 h-5 text-yellow-500" />
+            ) : (
+              <Moon className="w-5 h-5 text-purple-500" />
+            )}
+          </Button>
+
           <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-card-foreground">
             <Settings className="w-5 h-5" />
           </Button>

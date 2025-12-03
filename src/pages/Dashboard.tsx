@@ -14,14 +14,14 @@ import { AddTransactionForm } from '@/components/dashboard/AddTransactionForm';
 
 const DashboardContent = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-secondary via-muted to-secondary">
+    <div className="min-h-screen bg-background">
       <DashboardHeader />
 
       <main className="container mx-auto px-4 py-6 space-y-6">
         {/* Título e ação principal */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-display font-bold text-card-foreground">
+            <h2 className="text-2xl font-display font-bold text-foreground">
               Dashboard Financeiro
             </h2>
             <p className="text-muted-foreground">
