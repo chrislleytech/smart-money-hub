@@ -6,9 +6,9 @@
 
 @layer base {
   :root {
-    /* MoneyPro Design System - Purple & Silver Theme */
-    --background: 270 50% 8%;
-    --foreground: 270 20% 98%;
+    /* MoneyPro Design System - Light Theme (Purple) */
+    --background: 270 30% 98%;
+    --foreground: 270 50% 10%;
 
     --card: 0 0% 100%;
     --card-foreground: 270 50% 10%;
@@ -43,57 +43,96 @@
 
     --radius: 0.75rem;
 
-    /* Custom MoneyPro tokens */
-    --navy-dark: 270 55% 8%;
-    --navy-medium: 270 50% 15%;
-    --navy-light: 270 45% 22%;
+    /* Custom MoneyPro tokens - Light */
+    --navy-dark: 270 40% 20%;
+    --navy-medium: 270 35% 30%;
+    --navy-light: 270 30% 40%;
     --silver: 270 10% 75%;
     --silver-light: 270 15% 94%;
-    --glass-bg: 270 30% 96% / 0.88;
-    --glass-border: 270 25% 80% / 0.35;
+    --glass-bg: 270 30% 96% / 0.92;
+    --glass-border: 270 25% 80% / 0.4;
 
-    /* Gradients */
-    --gradient-navy: linear-gradient(135deg, hsl(270 55% 8%) 0%, hsl(270 50% 15%) 50%, hsl(280 50% 18%) 100%);
+    /* Gradients - Light */
+    --gradient-navy: linear-gradient(135deg, hsl(270 30% 95%) 0%, hsl(270 25% 90%) 50%, hsl(280 25% 92%) 100%);
     --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(270 25% 98%) 100%);
     --gradient-primary: linear-gradient(135deg, hsl(270 80% 55%) 0%, hsl(280 70% 60%) 100%);
-    --gradient-glass: linear-gradient(135deg, hsl(270 30% 96% / 0.92) 0%, hsl(270 30% 98% / 0.75) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(270 30% 98% / 0.95) 0%, hsl(270 30% 100% / 0.85) 100%);
 
     /* Shadows */
-    --shadow-sm: 0 2px 8px hsl(270 55% 8% / 0.1);
-    --shadow-md: 0 4px 16px hsl(270 55% 8% / 0.14);
-    --shadow-lg: 0 8px 32px hsl(270 55% 8% / 0.2);
-    --shadow-glow: 0 0 40px hsl(270 80% 55% / 0.3);
+    --shadow-sm: 0 2px 8px hsl(270 30% 50% / 0.08);
+    --shadow-md: 0 4px 16px hsl(270 30% 50% / 0.12);
+    --shadow-lg: 0 8px 32px hsl(270 30% 50% / 0.16);
+    --shadow-glow: 0 0 40px hsl(270 80% 55% / 0.25);
 
-    --sidebar-background: 270 55% 8%;
-    --sidebar-foreground: 270 20% 98%;
+    --sidebar-background: 270 30% 98%;
+    --sidebar-foreground: 270 50% 10%;
     --sidebar-primary: 270 80% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 270 50% 15%;
-    --sidebar-accent-foreground: 270 20% 98%;
-    --sidebar-border: 270 45% 22%;
+    --sidebar-accent: 270 25% 92%;
+    --sidebar-accent-foreground: 270 50% 10%;
+    --sidebar-border: 270 15% 85%;
     --sidebar-ring: 270 80% 55%;
   }
 
   .dark {
+    /* MoneyPro Design System - Dark Theme (Purple) */
     --background: 270 55% 8%;
     --foreground: 270 20% 98%;
-    --card: 270 50% 12%;
+
+    --card: 270 45% 12%;
     --card-foreground: 270 20% 98%;
-    --popover: 270 50% 12%;
+
+    --popover: 270 45% 12%;
     --popover-foreground: 270 20% 98%;
+
     --primary: 270 80% 60%;
     --primary-foreground: 0 0% 100%;
+
     --secondary: 270 40% 18%;
     --secondary-foreground: 270 20% 98%;
+
     --muted: 270 35% 22%;
     --muted-foreground: 270 12% 65%;
+
     --accent: 280 70% 60%;
     --accent-foreground: 0 0% 100%;
+
     --destructive: 0 62% 45%;
     --destructive-foreground: 0 0% 100%;
+
     --border: 270 35% 22%;
     --input: 270 35% 22%;
     --ring: 270 80% 60%;
+
+    /* Custom MoneyPro tokens - Dark */
+    --navy-dark: 270 55% 8%;
+    --navy-medium: 270 50% 15%;
+    --navy-light: 270 45% 22%;
+    --silver: 270 10% 60%;
+    --silver-light: 270 15% 30%;
+    --glass-bg: 270 40% 15% / 0.9;
+    --glass-border: 270 30% 35% / 0.4;
+
+    /* Gradients - Dark */
+    --gradient-navy: linear-gradient(135deg, hsl(270 55% 8%) 0%, hsl(270 50% 15%) 50%, hsl(280 50% 18%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(270 45% 14%) 0%, hsl(270 45% 12%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(270 80% 55%) 0%, hsl(280 70% 60%) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(270 40% 18% / 0.95) 0%, hsl(270 40% 15% / 0.85) 100%);
+
+    /* Shadows - Dark */
+    --shadow-sm: 0 2px 8px hsl(270 55% 5% / 0.3);
+    --shadow-md: 0 4px 16px hsl(270 55% 5% / 0.4);
+    --shadow-lg: 0 8px 32px hsl(270 55% 5% / 0.5);
+    --shadow-glow: 0 0 40px hsl(270 80% 55% / 0.35);
+
+    --sidebar-background: 270 55% 8%;
+    --sidebar-foreground: 270 20% 98%;
+    --sidebar-primary: 270 80% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 270 50% 15%;
+    --sidebar-accent-foreground: 270 20% 98%;
+    --sidebar-border: 270 45% 22%;
+    --sidebar-ring: 270 80% 60%;
   }
 }
 
@@ -115,7 +154,7 @@
 @layer components {
   /* Glass morphism card */
   .glass-card {
-    @apply backdrop-blur-xl border;
+    @apply backdrop-blur-xl border rounded-2xl;
     background: var(--gradient-glass);
     border-color: hsl(var(--glass-border));
     box-shadow: var(--shadow-md);
@@ -150,8 +189,7 @@
 
   /* Stat card styles */
   .stat-card {
-    @apply rounded-xl p-5 transition-all duration-300;
-    background: var(--gradient-card);
+    @apply rounded-xl p-5 transition-all duration-300 bg-card;
     box-shadow: var(--shadow-sm);
   }
 
@@ -161,7 +199,7 @@
 
   /* Input glass style */
   .input-glass {
-    @apply bg-white/80 backdrop-blur-sm border-silver/30 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200;
+    @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200;
   }
 
   /* Geometric decorations */
