@@ -36,14 +36,14 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
   const categories = useMemo(() => {
     const categoryMap = new Map<string, number>();
     const colors: Record<string, string> = {
-      'Alimentação': '#0066CC',
-      'Transporte': '#3399FF',
-      'Moradia': '#1a365d',
-      'Lazer': '#63B3ED',
-      'Saúde': '#4A5568',
-      'Educação': '#2D3748',
-      'Compras': '#718096',
-      'Outros': '#A0AEC0',
+      'Alimentação': '#8B5CF6',
+      'Transporte': '#A78BFA',
+      'Moradia': '#581C87',
+      'Lazer': '#C4B5FD',
+      'Saúde': '#6D28D9',
+      'Educação': '#7C3AED',
+      'Compras': '#9333EA',
+      'Outros': '#DDD6FE',
       'Salário': '#22C55E',
     };
 
@@ -57,7 +57,7 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
     return Array.from(categoryMap.entries()).map(([name, value]) => ({
       name,
       value,
-      color: colors[name] || '#718096',
+      color: colors[name] || '#9333EA',
     }));
   }, [transactions]);
 

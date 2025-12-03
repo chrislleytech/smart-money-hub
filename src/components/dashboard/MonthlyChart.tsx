@@ -53,8 +53,8 @@ export function MonthlyChart() {
               <stop offset="95%" stopColor="#22C55E" stopOpacity={0} />
             </linearGradient>
             <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#0066CC" stopOpacity={0.3} />
-              <stop offset="95%" stopColor="#0066CC" stopOpacity={0} />
+              <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
@@ -81,7 +81,7 @@ export function MonthlyChart() {
           <Area
             type="monotone"
             dataKey="expense"
-            stroke="#0066CC"
+            stroke="#8B5CF6"
             strokeWidth={2}
             fillOpacity={1}
             fill="url(#colorExpense)"

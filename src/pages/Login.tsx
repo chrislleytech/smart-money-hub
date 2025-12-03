@@ -25,7 +25,7 @@ const Login = () => {
       {/* Créditos */}
       <div className="absolute bottom-4 text-center w-full">
         <p className="text-xs text-foreground/50">
-          MoneyPro © 2024 - Seu organizador financeiro
+          MoneyPro © 2025 - Seu organizador financeiro
         </p>
       </div>
     </div>

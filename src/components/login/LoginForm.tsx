@@ -1,4 +1,4 @@
-// Formulário de login do MoneyPro
+// Formulário de login e cadastro do MoneyPro
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -6,15 +6,18 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Wallet, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Wallet, Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 export function LoginForm() {
+  const [isLogin, setIsLogin] = useState(true);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -22,29 +25,76 @@ export function LoginForm() {
     setIsLoading(true);
 
     try {
-      const success = await login(email, password);
-      if (success) {
-        toast({
-          title: 'Bem-vindo ao MoneyPro!',
-          description: 'Login realizado com sucesso.',
-        });
-        navigate('/dashboard');
+      if (isLogin) {
+        // Login
+        const success = await login(email, password);
+        if (success) {
+          toast({
+            title: 'Bem-vindo ao MoneyPro!',
+            description: 'Login realizado com sucesso.',
+          });
+          navigate('/dashboard');
+        } else {
+          toast({
+            title: 'Erro no login',
+            description: 'Email ou senha incorretos.',
+            variant: 'destructive',
+          });
+        }
       } else {
-        toast({
-          title: 'Erro no login',
-          description: 'Verifique suas credenciais e tente novamente.',
-          variant: 'destructive',
-        });
+        // Cadastro
+        if (password !== confirmPassword) {
+          toast({
+            title: 'Erro',
+            description: 'As senhas não coincidem.',
+            variant: 'destructive',
+          });
+          setIsLoading(false);
+          return;
+        }
+
+        if (password.length < 6) {
+          toast({
+            title: 'Erro',
+            description: 'A senha deve ter pelo menos 6 caracteres.',
+            variant: 'destructive',
+          });
+          setIsLoading(false);
+          return;
+        }
+
+        const success = await register(name, email, password);
+        if (success) {
+          toast({
+            title: 'Conta criada!',
+            description: 'Sua conta foi criada com sucesso.',
+          });
+          navigate('/dashboard');
+        } else {
+          toast({
+            title: 'Erro no cadastro',
+            description: 'Não foi possível criar a conta. Tente novamente.',
+            variant: 'destructive',
+          });
+        }
       }
     } catch (error) {
       toast({
         title: 'Erro',
-        description: 'Ocorreu um erro ao fazer login.',
+        description: 'Ocorreu um erro. Tente novamente.',
         variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const toggleMode = () => {
+    setIsLogin(!isLogin);
+    setName('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
   };
 
   return (
@@ -57,8 +107,36 @@ export function LoginForm() {
         <h1 className="text-2xl font-display font-bold text-card-foreground">MoneyPro</h1>
       </div>
 
+      {/* Título do formulário */}
+      <h2 className="text-lg font-semibold text-card-foreground mb-6">
+        {isLogin ? 'Entrar na sua conta' : 'Criar nova conta'}
+      </h2>
+
       {/* Formulário */}
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Campo Nome (apenas no cadastro) */}
+        {!isLogin && (
+          <div className="space-y-2">
+            <Label htmlFor="name" className="text-card-foreground font-medium">
+              Nome
+            </Label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Input
+                id="name"
+                type="text"
+                placeholder="Seu nome"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                variant="glass"
+                className="pl-10"
+                required={!isLogin}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Campo Email */}
         <div className="space-y-2">
           <Label htmlFor="email" className="text-card-foreground font-medium">
             Email
@@ -78,6 +156,7 @@ export function LoginForm() {
           </div>
         </div>
 
+        {/* Campo Senha */}
         <div className="space-y-2">
           <Label htmlFor="password" className="text-card-foreground font-medium">
             Senha
@@ -104,6 +183,28 @@ export function LoginForm() {
           </div>
         </div>
 
+        {/* Campo Confirmar Senha (apenas no cadastro) */}
+        {!isLogin && (
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword" className="text-card-foreground font-medium">
+              Confirmar Senha
+            </Label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Input
+                id="confirmPassword"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                variant="glass"
+                className="pl-10"
+                required={!isLogin}
+              />
+            </div>
+          </div>
+        )}
+
         <Button
           type="submit"
           variant="premium"
@@ -111,21 +212,30 @@ export function LoginForm() {
           className="w-full mt-6"
           disabled={isLoading}
         >
-          {isLoading ? 'Entrando...' : 'Entrar'}
+          {isLoading ? (isLogin ? 'Entrando...' : 'Criando conta...') : (isLogin ? 'Entrar' : 'Criar Conta')}
         </Button>
 
-        <button
-          type="button"
-          className="w-full text-sm text-muted-foreground hover:text-primary transition-colors text-center"
-        >
-          Esqueceu a senha?
-        </button>
+        {isLogin && (
+          <button
+            type="button"
+            className="w-full text-sm text-muted-foreground hover:text-primary transition-colors text-center"
+          >
+            Esqueceu a senha?
+          </button>
+        )}
       </form>
 
-      {/* Dica para demo */}
-      <div className="mt-6 pt-4 border-t border-border/50">
-        <p className="text-xs text-muted-foreground text-center">
-          Demo: Use qualquer email e senha (min. 4 caracteres)
+      {/* Alternar entre login e cadastro */}
+      <div className="mt-6 pt-4 border-t border-border/50 text-center">
+        <p className="text-sm text-muted-foreground">
+          {isLogin ? 'Não tem uma conta?' : 'Já tem uma conta?'}
+          <button
+            type="button"
+            onClick={toggleMode}
+            className="ml-1 text-primary hover:text-primary/80 font-semibold transition-colors"
+          >
+            {isLogin ? 'Cadastre-se' : 'Entrar'}
+          </button>
         </p>
       </div>
     </div>
