@@ -9,7 +9,7 @@ export const mockTransactions: Transaction[] = [
     description: 'Supermercado Extra',
     category: 'Alimentação',
     value: 450.00,
-    date: '2024-12-01',
+    date: '2025-01-01',
   },
   {
     id: '2',
@@ -17,7 +17,7 @@ export const mockTransactions: Transaction[] = [
     description: 'Uber - Trabalho',
     category: 'Transporte',
     value: 85.50,
-    date: '2024-12-01',
+    date: '2025-01-01',
   },
   {
     id: '3',
@@ -25,7 +25,7 @@ export const mockTransactions: Transaction[] = [
     description: 'Salário',
     category: 'Salário',
     value: 5500.00,
-    date: '2024-11-30',
+    date: '2024-12-30',
   },
   {
     id: '4',
@@ -33,7 +33,7 @@ export const mockTransactions: Transaction[] = [
     description: 'Netflix',
     category: 'Lazer',
     value: 55.90,
-    date: '2024-11-28',
+    date: '2024-12-28',
   },
   {
     id: '5',
@@ -41,7 +41,7 @@ export const mockTransactions: Transaction[] = [
     description: 'Conta de Luz',
     category: 'Moradia',
     value: 180.00,
-    date: '2024-11-27',
+    date: '2024-12-27',
   },
   {
     id: '6',
@@ -49,7 +49,7 @@ export const mockTransactions: Transaction[] = [
     description: 'Restaurante',
     category: 'Alimentação',
     value: 120.00,
-    date: '2024-11-26',
+    date: '2024-12-26',
   },
   {
     id: '7',
@@ -57,7 +57,7 @@ export const mockTransactions: Transaction[] = [
     description: 'Combustível',
     category: 'Transporte',
     value: 200.00,
-    date: '2024-11-25',
+    date: '2024-12-25',
   },
   {
     id: '8',
@@ -65,25 +65,25 @@ export const mockTransactions: Transaction[] = [
     description: 'Academia',
     category: 'Saúde',
     value: 99.90,
-    date: '2024-11-24',
+    date: '2024-12-24',
   },
 ];
 
 export const mockCategories: Category[] = [
-  { name: 'Alimentação', value: 570, color: '#0066CC' },
-  { name: 'Transporte', value: 285.5, color: '#3399FF' },
-  { name: 'Moradia', value: 180, color: '#1a365d' },
-  { name: 'Lazer', value: 55.9, color: '#63B3ED' },
-  { name: 'Saúde', value: 99.9, color: '#4A5568' },
+  { name: 'Alimentação', value: 570, color: '#8B5CF6' },
+  { name: 'Transporte', value: 285.5, color: '#A78BFA' },
+  { name: 'Moradia', value: 180, color: '#581C87' },
+  { name: 'Lazer', value: 55.9, color: '#C4B5FD' },
+  { name: 'Saúde', value: 99.9, color: '#6D28D9' },
 ];
 
 export const mockMonthlyData: MonthlyData[] = [
-  { month: 'Jul', income: 5500, expense: 3200 },
-  { month: 'Ago', income: 5500, expense: 3800 },
-  { month: 'Set', income: 5800, expense: 3100 },
-  { month: 'Out', income: 5500, expense: 3500 },
-  { month: 'Nov', income: 5500, expense: 3191.3 },
-  { month: 'Dez', income: 0, expense: 535.5 },
+  { month: 'Ago', income: 5500, expense: 3200 },
+  { month: 'Set', income: 5500, expense: 3800 },
+  { month: 'Out', income: 5800, expense: 3100 },
+  { month: 'Nov', income: 5500, expense: 3500 },
+  { month: 'Dez', income: 5500, expense: 3191.3 },
+  { month: 'Jan', income: 0, expense: 535.5 },
 ];
 
 export const mockSummary: FinanceSummary = {
