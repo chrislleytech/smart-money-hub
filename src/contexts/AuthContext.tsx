@@ -1,83 +1,113 @@
-// Contexto de autenticação do MoneyPro
+// Contexto de autenticação do MoneyPro com Supabase
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { User } from '@/types/finance';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { User, Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AuthContextType {
   user: User | null;
+  session: Session | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  register: (name: string, email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  register: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Simular armazenamento de usuários (em produção, conectar com Lovable Cloud)
-const users: Map<string, { name: string; password: string }> = new Map();
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    // Verificar se o usuário existe
-    const storedUser = users.get(email);
-    
-    if (storedUser && storedUser.password === password) {
-      setUser({
-        id: email,
-        email,
-        name: storedUser.name,
-      });
-      return true;
-    }
-    
-    // Para demonstração, permitir login com qualquer email/senha válidos
-    if (email && password.length >= 6) {
-      setUser({
-        id: email,
-        email,
-        name: email.split('@')[0],
-      });
-      return true;
-    }
-    
-    return false;
-  };
+  useEffect(() => {
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setIsLoading(false);
+      }
+    );
 
-  const register = async (name: string, email: string, password: string): Promise<boolean> => {
-    // Verificar se o email já está cadastrado
-    if (users.has(email)) {
-      return false;
-    }
-
-    // Validações
-    if (!name || !email || password.length < 6) {
-      return false;
-    }
-
-    // Registrar novo usuário
-    users.set(email, { name, password });
-    
-    // Fazer login automaticamente após cadastro
-    setUser({
-      id: email,
-      email,
-      name,
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setIsLoading(false);
     });
-    
-    return true;
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        if (error.message.includes('Invalid login credentials')) {
+          return { success: false, error: 'Email ou senha incorretos.' };
+        }
+        if (error.message.includes('Email not confirmed')) {
+          return { success: false, error: 'Confirme seu email antes de fazer login.' };
+        }
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: 'Erro ao fazer login. Tente novamente.' };
+    }
   };
 
-  const logout = () => {
-    setUser(null);
+  const register = async (name: string, email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const redirectUrl = `${window.location.origin}/`;
+      
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            name: name,
+          },
+        },
+      });
+
+      if (error) {
+        if (error.message.includes('User already registered')) {
+          return { success: false, error: 'Este email já está cadastrado.' };
+        }
+        return { success: false, error: error.message };
+      }
+
+      // Check if email confirmation is required
+      if (data.user && !data.session) {
+        return { success: true, error: 'Verifique seu email para confirmar o cadastro.' };
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: 'Erro ao criar conta. Tente novamente.' };
+    }
+  };
+
+  const logout = async () => {
+    await supabase.auth.signOut();
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        isAuthenticated: !!user,
+        session,
+        isAuthenticated: !!session,
+        isLoading,
         login,
         register,
         logout,

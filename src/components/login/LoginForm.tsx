@@ -28,8 +28,8 @@ export function LoginForm() {
     try {
       if (isLogin) {
         // Login
-        const success = await login(email, password);
-        if (success) {
+        const result = await login(email, password);
+        if (result.success) {
           toast({
             title: 'Bem-vindo ao MoneyPro!',
             description: 'Login realizado com sucesso.',
@@ -38,7 +38,7 @@ export function LoginForm() {
         } else {
           toast({
             title: 'Erro no login',
-            description: 'Email ou senha incorretos.',
+            description: result.error || 'Email ou senha incorretos.',
             variant: 'destructive',
           });
         }
@@ -64,17 +64,25 @@ export function LoginForm() {
           return;
         }
 
-        const success = await register(name, email, password);
-        if (success) {
-          toast({
-            title: 'Conta criada!',
-            description: 'Sua conta foi criada com sucesso.',
-          });
-          navigate('/dashboard');
+        const result = await register(name, email, password);
+        if (result.success) {
+          if (result.error) {
+            // Email confirmation required
+            toast({
+              title: 'Conta criada!',
+              description: result.error,
+            });
+          } else {
+            toast({
+              title: 'Conta criada!',
+              description: 'Sua conta foi criada com sucesso.',
+            });
+            navigate('/dashboard');
+          }
         } else {
           toast({
             title: 'Erro no cadastro',
-            description: 'Não foi possível criar a conta. Tente novamente.',
+            description: result.error || 'Não foi possível criar a conta. Tente novamente.',
             variant: 'destructive',
           });
         }
