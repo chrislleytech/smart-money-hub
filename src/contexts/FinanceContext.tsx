@@ -1,35 +1,124 @@
-// Contexto de finanças do MoneyPro
+// Contexto de finanças do MoneyPro com Supabase
 
-import React, { createContext, useContext, useState, ReactNode, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo, useCallback } from 'react';
 import { Transaction, Category, MonthlyData, FinanceSummary } from '@/types/finance';
-import { mockTransactions, mockMonthlyData } from '@/data/mockData';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from './AuthContext';
 
 interface FinanceContextType {
   transactions: Transaction[];
-  addTransaction: (transaction: Omit<Transaction, 'id'>) => void;
-  deleteTransaction: (id: string) => void;
+  addTransaction: (transaction: Omit<Transaction, 'id'>) => Promise<void>;
+  deleteTransaction: (id: string) => Promise<void>;
   categories: Category[];
   monthlyData: MonthlyData[];
   summary: FinanceSummary;
+  isLoading: boolean;
 }
 
 const FinanceContext = createContext<FinanceContextType | undefined>(undefined);
 
 export function FinanceProvider({ children }: { children: ReactNode }) {
-  const [transactions, setTransactions] = useState<Transaction[]>(mockTransactions);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
+
+  // Carregar transações do banco de dados
+  const loadTransactions = useCallback(async () => {
+    if (!user) {
+      setTransactions([]);
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('transactions')
+        .select('*')
+        .order('date', { ascending: false });
+
+      if (error) {
+        console.error('Erro ao carregar transações:', error);
+        return;
+      }
+
+      const formattedTransactions: Transaction[] = (data || []).map(t => ({
+        id: t.id,
+        type: t.type as 'income' | 'expense',
+        description: t.description,
+        category: t.category,
+        value: Number(t.value),
+        date: t.date,
+      }));
+
+      setTransactions(formattedTransactions);
+    } catch (error) {
+      console.error('Erro ao carregar transações:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    loadTransactions();
+  }, [loadTransactions]);
 
   // Adicionar nova transação
-  const addTransaction = (transaction: Omit<Transaction, 'id'>) => {
-    const newTransaction: Transaction = {
-      ...transaction,
-      id: Date.now().toString(),
-    };
-    setTransactions(prev => [newTransaction, ...prev]);
+  const addTransaction = async (transaction: Omit<Transaction, 'id'>) => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('transactions')
+        .insert({
+          user_id: user.id,
+          type: transaction.type,
+          description: transaction.description,
+          category: transaction.category,
+          value: transaction.value,
+          date: transaction.date,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Erro ao adicionar transação:', error);
+        throw error;
+      }
+
+      const newTransaction: Transaction = {
+        id: data.id,
+        type: data.type as 'income' | 'expense',
+        description: data.description,
+        category: data.category,
+        value: Number(data.value),
+        date: data.date,
+      };
+
+      setTransactions(prev => [newTransaction, ...prev]);
+    } catch (error) {
+      console.error('Erro ao adicionar transação:', error);
+      throw error;
+    }
   };
 
   // Deletar transação
-  const deleteTransaction = (id: string) => {
-    setTransactions(prev => prev.filter(t => t.id !== id));
+  const deleteTransaction = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('transactions')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Erro ao deletar transação:', error);
+        throw error;
+      }
+
+      setTransactions(prev => prev.filter(t => t.id !== id));
+    } catch (error) {
+      console.error('Erro ao deletar transação:', error);
+      throw error;
+    }
   };
 
   // Calcular categorias dinamicamente
@@ -61,6 +150,37 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
     }));
   }, [transactions]);
 
+  // Calcular dados mensais
+  const monthlyData = useMemo((): MonthlyData[] => {
+    const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    const currentMonth = new Date().getMonth();
+    const months: MonthlyData[] = [];
+
+    for (let i = 5; i >= 0; i--) {
+      const monthIndex = (currentMonth - i + 12) % 12;
+      const monthTransactions = transactions.filter(t => {
+        const date = new Date(t.date);
+        return date.getMonth() === monthIndex;
+      });
+
+      const income = monthTransactions
+        .filter(t => t.type === 'income')
+        .reduce((acc, t) => acc + t.value, 0);
+
+      const expense = monthTransactions
+        .filter(t => t.type === 'expense')
+        .reduce((acc, t) => acc + t.value, 0);
+
+      months.push({
+        month: monthNames[monthIndex],
+        income,
+        expense,
+      });
+    }
+
+    return months;
+  }, [transactions]);
+
   // Calcular resumo financeiro
   const summary = useMemo((): FinanceSummary => {
     const currentMonth = new Date().getMonth();
@@ -79,11 +199,10 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
       .filter(t => t.type === 'income')
       .reduce((acc, t) => acc + t.value, 0);
 
-    // Calcular média de gastos para previsão
     const allExpenses = transactions
       .filter(t => t.type === 'expense')
       .reduce((acc, t) => acc + t.value, 0);
-    const avgExpense = allExpenses / 6; // Média dos últimos 6 meses
+    const avgExpense = transactions.length > 0 ? allExpenses / 6 : 0;
 
     const totalIncome = transactions
       .filter(t => t.type === 'income')
@@ -93,11 +212,11 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
       .filter(t => t.type === 'expense')
       .reduce((acc, t) => acc + t.value, 0);
 
-    const budget = 4000; // Orçamento mensal definido
-    const budgetUsedPercent = Math.round((monthlyExpenses / budget) * 100);
+    const budget = 4000;
+    const budgetUsedPercent = budget > 0 ? Math.round((monthlyExpenses / budget) * 100) : 0;
 
     return {
-      totalBalance: totalIncome - totalExpense + 15000, // Saldo inicial de demonstração
+      totalBalance: totalIncome - totalExpense,
       monthlyExpenses,
       monthlyIncome,
       forecast: Math.round(avgExpense),
@@ -112,8 +231,9 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
         addTransaction,
         deleteTransaction,
         categories,
-        monthlyData: mockMonthlyData,
+        monthlyData,
         summary,
+        isLoading,
       }}
     >
       {children}
