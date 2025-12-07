@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Wallet, Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { ForgotPasswordModal } from './ForgotPasswordModal';
 
 export function LoginForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -18,6 +19,7 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const { login, register } = useAuth();
   const navigate = useNavigate();
 
@@ -234,6 +236,7 @@ export function LoginForm() {
         {isLogin && (
           <button
             type="button"
+            onClick={() => setShowForgotPassword(true)}
             className="w-full text-sm text-muted-foreground hover:text-primary transition-colors text-center"
           >
             Esqueceu a senha?
@@ -241,6 +244,11 @@ export function LoginForm() {
         )}
       </form>
 
+      {/* Modal de recuperação de senha */}
+      <ForgotPasswordModal
+        open={showForgotPassword}
+        onOpenChange={setShowForgotPassword}
+      />
       {/* Alternar entre login e cadastro */}
       <div className="mt-6 pt-4 border-t border-border/50 text-center">
         <p className="text-sm text-muted-foreground">
