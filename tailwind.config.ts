@@ -85,10 +85,10 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
-        'glow': '0 0 40px hsl(210 100% 50% / 0.25)',
-        'glow-lg': '0 0 60px hsl(210 100% 50% / 0.35)',
-        'card': '0 4px 16px hsl(220 50% 10% / 0.12)',
-        'card-hover': '0 8px 32px hsl(220 50% 10% / 0.18)',
+        'glow': '0 0 40px hsl(12 60% 60% / 0.25)',
+        'glow-lg': '0 0 60px hsl(12 60% 60% / 0.35)',
+        'card': '0 4px 16px hsl(15 25% 15% / 0.12)',
+        'card-hover': '0 8px 32px hsl(15 25% 15% / 0.18)',
       },
       keyframes: {
         "accordion-down": {
@@ -112,8 +112,8 @@ export default {
           to: { opacity: "1" },
         },
         "pulse-glow": {
-          "0%, 100%": { boxShadow: "0 0 20px hsl(210 100% 50% / 0.2)" },
-          "50%": { boxShadow: "0 0 40px hsl(210 100% 50% / 0.4)" },
+          "0%, 100%": { boxShadow: "0 0 20px hsl(12 60% 60% / 0.2)" },
+          "50%": { boxShadow: "0 0 40px hsl(12 60% 60% / 0.4)" },
         },
       },
       animation: {
