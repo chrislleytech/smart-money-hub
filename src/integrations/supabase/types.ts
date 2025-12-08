@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      category_budgets: {
+        Row: {
+          budget_limit: number
+          category_name: string
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          budget_limit?: number
+          category_name: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          budget_limit?: number
+          category_name?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      custom_categories: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -86,6 +140,39 @@ export type Database = {
           type?: string
           user_id?: string
           value?: number
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          budget_alerts_enabled: boolean | null
+          created_at: string
+          id: string
+          monthly_budget: number | null
+          notifications_enabled: boolean | null
+          reminder_enabled: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          budget_alerts_enabled?: boolean | null
+          created_at?: string
+          id?: string
+          monthly_budget?: number | null
+          notifications_enabled?: boolean | null
+          reminder_enabled?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          budget_alerts_enabled?: boolean | null
+          created_at?: string
+          id?: string
+          monthly_budget?: number | null
+          notifications_enabled?: boolean | null
+          reminder_enabled?: boolean | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
