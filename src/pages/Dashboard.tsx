@@ -11,6 +11,8 @@ import { MonthlyChart } from '@/components/dashboard/MonthlyChart';
 import { BudgetAlert } from '@/components/dashboard/BudgetAlert';
 import { TransactionTable } from '@/components/dashboard/TransactionTable';
 import { AddTransactionForm } from '@/components/dashboard/AddTransactionForm';
+import { SmartAnalysis } from '@/components/dashboard/SmartAnalysis';
+import { FinancialProgress } from '@/components/dashboard/FinancialProgress';
 
 const DashboardContent = () => {
   return (
@@ -36,6 +38,12 @@ const DashboardContent = () => {
 
         {/* Cards de estatísticas */}
         <StatCards />
+
+        {/* Análise inteligente e progresso */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <SmartAnalysis />
+          <FinancialProgress />
+        </div>
 
         {/* Gráficos lado a lado */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

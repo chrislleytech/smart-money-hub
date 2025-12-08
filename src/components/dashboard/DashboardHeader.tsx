@@ -51,7 +51,12 @@ export function DashboardHeader() {
             )}
           </Button>
 
-          <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-card-foreground">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-muted-foreground hover:text-card-foreground"
+            onClick={() => navigate('/settings')}
+          >
             <Settings className="w-5 h-5" />
           </Button>
 
